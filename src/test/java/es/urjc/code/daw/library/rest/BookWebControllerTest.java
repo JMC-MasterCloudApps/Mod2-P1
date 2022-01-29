@@ -9,6 +9,7 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
@@ -37,7 +39,6 @@ class BookWebControllerTest {
 
   @MockBean
   private BookService service;
-
 
   private static List<Book> books;
 
@@ -69,15 +70,24 @@ class BookWebControllerTest {
         jsonPath("$[0].title", equalTo(books.get(0).getTitle())));
   }
 
-//  @Test
-//  @SneakyThrows
-//  @DisplayName("Create new book as User")
-//  void createBookAsUser() {
-//
-//    mvc.perform(post(CREATE_BOOK_PATH)
-//        .contentType(APPLICATION_JSON)
-//        .content(""))
-//        .andExpect(status().isOk());
-//
-//  }
+  @Test
+  @SneakyThrows
+  @DisplayName("Create new book as User")
+  @WithMockUser(username = "user", password = "pass", roles = "USER")
+  void createBookAsUser() {
+
+    // GIVEN
+    var request = post(API_PATH + HOME_PATH).contentType(APPLICATION_JSON);
+
+    // WHEN
+    when(service.save(books.get(0))).thenReturn(books.get(0));
+    var response = mvc.perform(request);
+
+    // THEN
+    response.andExpectAll(
+        status().isCreated(),
+        content().contentType(APPLICATION_JSON),
+        jsonPath("$", hasSize(books.size())),
+        jsonPath("$[0].title", equalTo(books.get(0).getTitle())));
+  }
 }
