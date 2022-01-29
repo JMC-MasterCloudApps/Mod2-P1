@@ -1,8 +1,11 @@
 package es.urjc.code.daw.library.rest;
 
+import static es.urjc.code.daw.library.rest.BookRestController.API_PATH;
+
 import java.util.Collection;
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -21,13 +24,16 @@ import es.urjc.code.daw.library.book.Book;
 import es.urjc.code.daw.library.book.BookService;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping(API_PATH)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BookRestController {
 
-	@Autowired
-	private BookService service;
+	static final String API_PATH = "/api/books";
+	static final String HOME_PATH = "/";
 
-	@GetMapping("/")
+	private final BookService service;
+
+	@GetMapping(HOME_PATH)
 	public Collection<Book> getBooks() {
 		return service.findAll();
 	}

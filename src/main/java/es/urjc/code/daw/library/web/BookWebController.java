@@ -24,19 +24,18 @@ public class BookWebController {
 
 	@ModelAttribute
 	public void addAttributes(Model model) {
-		
+
 		boolean logged = userComponent.getLoggedUser() != null;
-		
+
 		model.addAttribute("logged", logged);
 		model.addAttribute("notLogged", !logged);
-		
+
 		if(logged){
 			model.addAttribute("userName",userComponent.getLoggedUser().getName());
 			model.addAttribute("admin", userComponent.getLoggedUser().getRoles().contains("ROLE_ADMIN"));
 		}
 	}
-	
-	
+
 	@GetMapping(HOME_PATH)
 	public String showBooks(Model model) {
 
@@ -44,10 +43,10 @@ public class BookWebController {
 		
 		return "books";
 	}
-	
+
 	@GetMapping("/books/{id}")
 	public String showBook(Model model, @PathVariable long id) {
-		
+
 		Optional<Book> op = service.findOne(id);
 		if(op.isPresent()) {
 			Book book = op.get();
@@ -56,12 +55,12 @@ public class BookWebController {
 		}else {
 			return "books";
 		}
-		
+
 	}
-	
+
 	@GetMapping("/removebook/{id}")
 	public String removeBook(Model model, @PathVariable long id) {
-		
+
 		Optional<Book> op = service.findOne(id);
 		if(op.isPresent()) {
 			Book book = op.get();
@@ -71,27 +70,26 @@ public class BookWebController {
 		}else {
 			return "redirect:/";
 		}
-		
+
 	}
-	
+
 	@GetMapping("/newbook")
-	public String newBook(Model model) {
-		
+	public String newBook() {
+
 		return "newBookPage";
 	}
 	
 	@PostMapping("/createbook")
 	public String newBookProcess(Book book) {
-		
-		
+
 		Book newBook = service.save(book);
-		
+
 		return "redirect:/books/" + newBook.getId();
 	}
-	
+
 	@GetMapping("/editbook/{id}")
 	public String editBook(Model model, @PathVariable long id) {
-		
+
 		Optional<Book> op = service.findOne(id);
 		if(op.isPresent()) {
 			Book book = op.get();
