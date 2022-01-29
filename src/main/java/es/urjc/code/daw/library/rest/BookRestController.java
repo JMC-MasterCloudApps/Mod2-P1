@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import es.urjc.code.daw.library.book.Book;
 import es.urjc.code.daw.library.book.BookService;
 
+@Slf4j
 @RestController
 @RequestMapping(API_PATH)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -51,7 +53,7 @@ public class BookRestController {
 		
 	}
 
-	@PostMapping("/")
+	@PostMapping(HOME_PATH)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Book createBook(@RequestBody Book book) {
 
