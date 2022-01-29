@@ -6,8 +6,11 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -29,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -90,5 +94,45 @@ class BookWebControllerTest {
         status().isCreated(),
         content().contentType(APPLICATION_JSON),
         jsonPath("$.title", equalTo(books.get(0).getTitle())));
+  }
+
+  @Test
+  @DisplayName("Delete book as Admin")
+  @WithMockUser(username = "admin", password = "pass", roles = "ADMIN")
+  void deleteBookAsAdmin() throws Exception {
+
+    // GIVEN
+    var bookId = 1;
+    var request = delete(API_PATH + HOME_PATH + bookId)
+        .contentType(APPLICATION_JSON);
+
+    // WHEN
+    doNothing().when(service).delete(bookId);
+    var response = mvc.perform(request);
+
+    // THEN
+    response.andExpectAll(
+        status().isOk(),
+        content().bytes("".getBytes()));
+  }
+
+  @Test
+  @DisplayName("Delete book as Admin not Found")
+  @WithMockUser(username = "admin", password = "pass", roles = "ADMIN")
+  void deleteBookAsAdminNotFound() throws Exception {
+
+    // GIVEN
+    var bookId = 1;
+    var request = delete(API_PATH + HOME_PATH + bookId)
+        .contentType(APPLICATION_JSON);
+
+    // WHEN
+    doThrow(EmptyResultDataAccessException.class).when(service).delete(bookId);
+    var response = mvc.perform(request);
+
+    // THEN
+    response.andExpectAll(
+        status().isNotFound(),
+        content().bytes("".getBytes()));
   }
 }
