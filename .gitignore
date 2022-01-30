@@ -24,9 +24,9 @@ hs_err_pid*
 
 .DS_Store
 
-.idea/**
+**/.idea/**
 .vscode
 .mvn/**
 mvnw
 mvnw.cmd
-target/**
+**/target/**
