@@ -1,7 +1,9 @@
 package es.codeurjc.mastercloudapps.planner.models;
 
 import java.io.Serializable;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class LandscapeResponse implements Serializable {
     
     private static final long serialVersionUID = 7053895734591440117L;
