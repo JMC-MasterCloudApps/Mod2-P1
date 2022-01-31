@@ -16,6 +16,8 @@
 
 	<properties>
 		<java.version>17</java.version>
+		<pact1.version>4.1.7</pact1.version>
+		<pact2.version>4.2.10</pact2.version>
 	</properties>
 
 	<dependencies>
@@ -35,6 +37,27 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>au.com.dius.pact.provider</groupId>
+			<artifactId>junit5</artifactId>
+			<version>${pact1.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>au.com.dius.pact.provider</groupId>
+			<artifactId>junit5spring</artifactId>
+			<version>${pact2.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Pact -->
+		<dependency>
+			<groupId>au.com.dius</groupId>
+			<artifactId>pact-jvm-provider-junit5</artifactId>
+			<version>4.0.10</version>
 		</dependency>
 
 		<!-- Lombok -->

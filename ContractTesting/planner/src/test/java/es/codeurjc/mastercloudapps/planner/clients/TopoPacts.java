@@ -26,19 +26,16 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootTest
 @Slf4j
 @ExtendWith(PactConsumerTestExt.class)
-@PactTestFor(providerName = "topoProvider", port = "8080")
-class TopoClientTest {
+@PactTestFor(providerName = "topo-provider", port = "8080")
+class TopoPacts {
 
   private static final String TOPO_PATH = "/api/topographicdetails/";
-  private static final String ID_VALUE = "1";
   private static final String MADRID = "Madrid";
   private static final String LANDSCAPE = "Flat";
   private static final String GIVEN = format("City '%s' exists", MADRID);
   private static final String DESCRIPTION = format("get city with name '%s'", MADRID);
 
-  String url = "http://"+TOPO_HOST+":"+TOPO_PORT+"/api/topographicdetails/" + MADRID;
-
-  @Pact(consumer = "planner-consumer-rest", provider = "topo-provider")
+  @Pact(consumer = "planner-consumer-rest")
   public RequestResponsePact getCity(PactDslWithProvider builder) {
 
     return builder.given(GIVEN)
