@@ -8,8 +8,8 @@ public class Eoloplant implements Serializable {
 
     private static final long serialVersionUID = 5511349529410950840L;
 
-    private int id;
-    private String city;
+    private final int id;
+    private final String city;
     private int progress = 0;
     private String planning;
 
